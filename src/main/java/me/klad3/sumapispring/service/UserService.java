@@ -1,10 +1,9 @@
 // src/main/java/com/example/loginapp/service/UserService.java
 
-package com.example.loginapp.service;
+package me.klad3.sumapispring.service;
 
-import com.example.loginapp.util.HtmlParserUtil;
-import com.example.loginapp.util.HttpClientUtil;
-import lombok.RequiredArgsConstructor;
+import me.klad3.sumapispring.util.HtmlParserUtil;
+import me.klad3.sumapispring.util.HttpClientUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;

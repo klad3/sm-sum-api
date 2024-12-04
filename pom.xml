@@ -8,11 +8,11 @@
         <version>3.3.6</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.example</groupId>
-    <artifactId>loginapp</artifactId>
+    <groupId>me.klad3</groupId>
+    <artifactId>sumapispring</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>loginapp</name>
-    <description>loginapp</description>
+    <name>sumapispring</name>
+    <description>sumapispring</description>
     <url/>
     <licenses>
         <license/>

@@ -1,6 +1,6 @@
 // src/main/java/com/example/loginapp/util/HtmlParserUtil.java
 
-package com.example.loginapp.util;
+package me.klad3.sumapispring.util;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

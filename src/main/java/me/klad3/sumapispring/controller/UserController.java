@@ -1,9 +1,8 @@
 // src/main/java/com/example/loginapp/controller/UserController.java
 
-package com.example.loginapp.controller;
+package me.klad3.sumapispring.controller;
 
-import com.example.loginapp.service.UserService;
-import lombok.RequiredArgsConstructor;
+import me.klad3.sumapispring.service.UserService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;

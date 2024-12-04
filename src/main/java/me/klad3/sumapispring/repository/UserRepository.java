@@ -1,8 +1,8 @@
 // src/main/java/com/example/loginapp/repository/UserRepository.java
 
-package com.example.loginapp.repository;
+package me.klad3.sumapispring.repository;
 
-import com.example.loginapp.model.User;
+import me.klad3.sumapispring.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;

@@ -1,6 +1,6 @@
 // src/main/java/com/example/loginapp/util/HttpClientUtil.java
 
-package com.example.loginapp.util;
+package me.klad3.sumapispring.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
