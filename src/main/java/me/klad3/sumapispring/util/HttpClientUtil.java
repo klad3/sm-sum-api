@@ -1,5 +1,3 @@
-// src/main/java/com/example/loginapp/util/HttpClientUtil.java
-
 package me.klad3.sumapispring.util;
 
 import lombok.extern.slf4j.Slf4j;
@@ -7,10 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 
 import java.io.IOException;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
-import java.net.HttpCookie;
-import java.net.URI;
+import java.net.*;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -42,6 +37,16 @@ public class HttpClientUtil {
         return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
+    public HttpResponse<String> getWithCookies(String url, String cookies) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(java.net.URI.create(url))
+                .GET()
+                .header("Accept", "application/json")
+                .header("Cookie", cookies)
+                .build();
+        return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
     public HttpResponse<String> post(String url, MultiValueMap<String, String> formData) throws IOException, InterruptedException {
         StringBuilder formBody = new StringBuilder();
         formData.forEach((key, values) -> {
@@ -57,6 +62,17 @@ public class HttpClientUtil {
                 .POST(HttpRequest.BodyPublishers.ofString(formBody.toString()))
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .header("Accept", "text/html")
+                .build();
+        return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
+    public HttpResponse<String> postWithCookies(String url, String body, String cookies, String contentType) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .header("Content-Type", contentType)
+                .header("Accept", "application/json")
+                .header("Cookie", cookies)
                 .build();
         return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
     }

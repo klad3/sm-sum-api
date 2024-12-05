@@ -1,5 +1,3 @@
-// src/main/java/me/klad3/sumapispring/dto/CreateUserResponse.java
-
 package me.klad3.sumapispring.dto;
 
 import lombok.AllArgsConstructor;

@@ -76,6 +76,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(ExternalApiException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleExternalApiException(ExternalApiException ex) {
+        ErrorResponse error = new ErrorResponse(ex.getMessage(), "External API Error");
+        ApiResponse<ErrorResponse> response = ApiResponse.error("External API Error", error);
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<ErrorResponse>> handleAllExceptions(Exception ex) {
         ErrorResponse error = new ErrorResponse("An unexpected error occurred", ex.getMessage());
