@@ -5,12 +5,15 @@ package me.klad3.sumapispring.util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
+
 import java.io.IOException;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
-import java.net.URI;
-import java.net.http.*;
 import java.net.HttpCookie;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.List;
 
 @Component
@@ -73,7 +76,7 @@ public class HttpClientUtil {
             try {
                 cookieManager.getCookieStore().add(URI.create("https://sum.unmsm.edu.pe"), HttpCookie.parse(cookie).get(0));
             } catch (Exception e) {
-                //log.error("Error al agregar cookie: {}", cookie, e);
+                log.error("Error al agregar cookie: {}", cookie, e);
             }
         });
     }

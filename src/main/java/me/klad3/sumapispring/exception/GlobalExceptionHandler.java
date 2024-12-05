@@ -4,15 +4,17 @@ import me.klad3.sumapispring.dto.ApiResponse;
 import me.klad3.sumapispring.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -42,6 +44,27 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ApiResponse<ErrorResponse>> handleBadRequestException(BadRequestException ex) {
         ErrorResponse error = new ErrorResponse(ex.getMessage(), "Bad Request");
+        ApiResponse<ErrorResponse> response = ApiResponse.error("Bad Request", error);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ApiKeyUnauthorizedException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleUnauthorized(ApiKeyUnauthorizedException ex) {
+        ErrorResponse error = new ErrorResponse(ex.getMessage(), "Unauthorized");
+        ApiResponse<ErrorResponse> response = ApiResponse.error("Unauthorized", error);
+        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleMissingParameter(MissingServletRequestParameterException ex) {
+        ErrorResponse error = new ErrorResponse(ex.getMessage(), "Missing Request Parameter");
+        ApiResponse<ErrorResponse> response = ApiResponse.error("Bad Request", error);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
+        ErrorResponse error = new ErrorResponse(ex.getMessage(), "Malformed JSON Request");
         ApiResponse<ErrorResponse> response = ApiResponse.error("Bad Request", error);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
