@@ -5,6 +5,7 @@ import me.klad3.sumapispring.dto.LoginResponse;
 import me.klad3.sumapispring.util.HttpClientUtil;
 import me.klad3.sumapispring.util.HtmlParserUtil;
 import me.klad3.sumapispring.exception.AuthenticationException;
+import me.klad3.sumapispring.exception.BadRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -22,12 +23,12 @@ public class UserService {
     public LoginResponse login(String username, String password) throws Exception {
         HttpResponse<String> getResponse = httpClientUtil.get("https://sum.unmsm.edu.pe/alumnoWebSum/login");
         if (getResponse.statusCode() != 200) {
-            throw new Exception("Failed to fetch login page");
+            throw new BadRequestException("Failed to fetch login page");
         }
 
         String csrfToken = htmlParserUtil.extractCsrfToken(getResponse.body());
         if (csrfToken == null) {
-            throw new Exception("CSRF token not found");
+            throw new BadRequestException("CSRF token not found");
         }
 
         MultiValueMap<String, String> loginData = new LinkedMultiValueMap<>();

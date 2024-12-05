@@ -32,6 +32,20 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        ErrorResponse error = new ErrorResponse(ex.getMessage(), "Resource not found");
+        ApiResponse<ErrorResponse> response = ApiResponse.error("Not Found", error);
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleBadRequestException(BadRequestException ex) {
+        ErrorResponse error = new ErrorResponse(ex.getMessage(), "Bad Request");
+        ApiResponse<ErrorResponse> response = ApiResponse.error("Bad Request", error);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<ErrorResponse>> handleAllExceptions(Exception ex) {
         ErrorResponse error = new ErrorResponse("An unexpected error occurred", ex.getMessage());
