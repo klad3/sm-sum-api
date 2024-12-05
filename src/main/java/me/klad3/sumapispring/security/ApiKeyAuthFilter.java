@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import me.klad3.sumapispring.exception.ApiKeyUnauthorizedException;
 import me.klad3.sumapispring.model.User;
-import me.klad3.sumapispring.service.AuthenticateService;
+import me.klad3.sumapispring.service.UserService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,7 +26,7 @@ import java.util.Optional;
 @Component
 public class ApiKeyAuthFilter extends OncePerRequestFilter {
 
-    private final AuthenticateService apiClientService;
+    private final UserService apiClientService;
 
     @Qualifier("handlerExceptionResolver") @NonNull
     private final HandlerExceptionResolver resolver;
@@ -37,9 +37,15 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
     @Value("${api.security.secret.header.name:API-Secret}")
     private String apiSecretHeaderName;
 
-    public ApiKeyAuthFilter(AuthenticateService apiClientService, @Qualifier("handlerExceptionResolver") @NonNull HandlerExceptionResolver resolver) {
+    public ApiKeyAuthFilter(UserService apiClientService, @Qualifier("handlerExceptionResolver") @NonNull HandlerExceptionResolver resolver) {
         this.apiClientService = apiClientService;
         this.resolver = resolver;
+    }
+
+    @Override
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return path.equals("/user/create");
     }
 
     @Override

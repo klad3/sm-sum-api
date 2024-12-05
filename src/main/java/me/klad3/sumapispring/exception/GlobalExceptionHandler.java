@@ -69,6 +69,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ResourceAlreadyExistsException.class)
+    public ResponseEntity<ApiResponse<ErrorResponse>> handleResourceAlreadyExists(ResourceAlreadyExistsException ex) {
+        ErrorResponse error = new ErrorResponse(ex.getMessage(), "Conflict");
+        ApiResponse<ErrorResponse> response = ApiResponse.error("Conflict", error);
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<ErrorResponse>> handleAllExceptions(Exception ex) {
         ErrorResponse error = new ErrorResponse("An unexpected error occurred", ex.getMessage());

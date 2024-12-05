@@ -1,58 +1,72 @@
 package me.klad3.sumapispring.service;
 
 import lombok.RequiredArgsConstructor;
-import me.klad3.sumapispring.dto.LoginResponse;
-import me.klad3.sumapispring.exception.AuthenticationException;
-import me.klad3.sumapispring.exception.BadRequestException;
-import me.klad3.sumapispring.util.HtmlParserUtil;
-import me.klad3.sumapispring.util.HttpClientUtil;
+import me.klad3.sumapispring.dto.CreateUserRequest;
+import me.klad3.sumapispring.dto.CreateUserResponse;
+import me.klad3.sumapispring.exception.ResourceAlreadyExistsException;
+import me.klad3.sumapispring.model.User;
+import me.klad3.sumapispring.repository.UserRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
-import java.io.IOException;
-import java.net.http.HttpResponse;
-import java.util.List;
+import java.security.SecureRandom;
+import java.util.Base64;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-    private final HttpClientUtil httpClientUtil;
-    private final HtmlParserUtil htmlParserUtil;
+    private final UserRepository userRepository;
+    private final SecureRandom secureRandom = new SecureRandom();
 
-    private static final String LOGIN_URL = "https://sum.unmsm.edu.pe/alumnoWebSum/login";
-    private static final String SESSION_URL = "https://sum.unmsm.edu.pe/alumnoWebSum/sesionIniciada";
-    private static final String RESTART_SESSION_URL = "https://sum.unmsm.edu.pe/alumnoWebSum/reiniciarSesion?us=";
+    public Optional<User> findByApiKey(String apiKey) {
+        return userRepository.findByApiKey(apiKey);
+    }
 
-    public LoginResponse login(String username, String password) throws IOException, InterruptedException {
-        HttpResponse<String> getResponse = httpClientUtil.get(LOGIN_URL);
-        if (getResponse.statusCode() != 200) {
-            throw new BadRequestException("Failed to fetch login page");
+    public CreateUserResponse createUser(CreateUserRequest request) throws ResourceAlreadyExistsException {
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new ResourceAlreadyExistsException("Username already exists");
+        }
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new ResourceAlreadyExistsException("Email already exists");
+        }
+        if (userRepository.existsByInstitutionId(request.getInstitutionId())) {
+            throw new ResourceAlreadyExistsException("Institution ID already exists");
         }
 
-        String csrfToken = htmlParserUtil.extractCsrfToken(getResponse.body());
-        if (csrfToken == null) {
-            throw new BadRequestException("CSRF token not found");
-        }
+        String apiKey = generateApiKey();
+        String apiSecret = generateApiSecret();
 
-        MultiValueMap<String, String> loginData = new LinkedMultiValueMap<>();
-        loginData.add("_csrf", csrfToken);
-        loginData.add("login", username);
-        loginData.add("clave", password);
+        User user = User.builder()
+                .username(request.getUsername())
+                .email(request.getEmail())
+                .institutionId(request.getInstitutionId())
+                .studentName(request.getStudentName())
+                .apiKey(apiKey)
+                .build();
+        user.setApiSecret(apiSecret);
+        userRepository.save(user);
 
-        HttpResponse<String> postResponse = httpClientUtil.post(LOGIN_URL, loginData);
-        String responseUrl = httpClientUtil.getFinalUrl(postResponse);
+        return new CreateUserResponse(
+                user.getUsername(),
+                user.getEmail(),
+                user.getInstitutionId(),
+                user.getStudentName(),
+                apiKey,
+                apiSecret,
+                "User created successfully"
+        );
+    }
 
-        if (LOGIN_URL.equals(responseUrl)) {
-            throw new AuthenticationException("Invalid credentials");
-        }
+    private String generateApiKey() {
+        byte[] key = new byte[24];
+        secureRandom.nextBytes(key);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(key);
+    }
 
-        if (SESSION_URL.equals(responseUrl)) {
-            httpClientUtil.get(RESTART_SESSION_URL + username);
-        }
-
-        List<String> sessionCookies = httpClientUtil.getAllCookies();
-        return new LoginResponse("Login successful", sessionCookies);
+    private String generateApiSecret() {
+        byte[] secret = new byte[32];
+        secureRandom.nextBytes(secret);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(secret);
     }
 }
