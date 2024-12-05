@@ -1,5 +1,3 @@
-// src/main/java/com/example/loginapp/model/User.java
-
 package me.klad3.sumapispring.model;
 
 import jakarta.persistence.*;
