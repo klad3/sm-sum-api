@@ -4,9 +4,17 @@ const apiBaseUrl: string = process.env.API_BASE_URL!;
 
 
 export interface ResponseApiSum {
+    "success": boolean,
     "message": string,
-    "apiKeyId": string,
-    "apiSecret": string
+    "data": {
+        "username": string,
+        "email": string,
+        "institutionId": string,
+        "studentName": string,
+        "apiKey": string,
+        "apiSecret": string,
+        "message": string
+    }
 }
 
 export async function createUser({ username, email, institution_id }: { username: string; email: string; institution_id: string }): Promise<{ success: boolean; message?: string; apiKeyId?: string; apiSecret?: string }> {
@@ -21,7 +29,7 @@ export async function createUser({ username, email, institution_id }: { username
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username, email, institution_id }),
+            body: JSON.stringify({ username, email, institutionId: institution_id, studentName: "Usuario" }),
         });
 
         // Logueamos la respuesta completa de la API
@@ -41,14 +49,14 @@ export async function createUser({ username, email, institution_id }: { username
         // Logueamos el cuerpo de la respuesta JSON
         console.log('Cuerpo de la respuesta:', responseBody);
 
-        const { message, apiKeyId, apiSecret } = responseBody;
+        const { success, message, data } = responseBody;
 
         // Verificar si el mensaje de respuesta es el esperado
-        if (message === 'User created successfully') {
+        if (success && message === 'User created successfully') {
             return {
                 success: true,
-                apiKeyId,
-                apiSecret,
+                apiKeyId: data.apiKey,
+                apiSecret: data.apiSecret,
             };
         }
 

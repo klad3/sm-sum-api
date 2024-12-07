@@ -36,8 +36,15 @@ export const CreateUserForm = () => {
                 return;
             }
 
-            localStorage.setItem('apiKey', result.apiKeyId);
-            localStorage.setItem('apiSecret', result.apiSecret);
+            if (result.apiKeyId && result.apiSecret) {
+                localStorage.setItem('apiKey', result.apiKeyId);
+                localStorage.setItem('apiSecret', result.apiSecret);
+            } else {
+                setSnackbarSeverity('error');
+                setSnackbarMessage('Error: API Key or Secret is missing');
+                setLoading(false);
+                return;
+            }
 
             setSnackbarSeverity('success');
             setSnackbarMessage('Usuario creado exitosamente. Redirigiendo...');

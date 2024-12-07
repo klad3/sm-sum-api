@@ -16,8 +16,8 @@ export async function POST(req: Request) {
         }
 
         // Obtener apiKey y apiSecret de las cabeceras
-        const apiKey = req.headers.get('x-api-key-id');
-        const apiSecret = req.headers.get('x-api-secret');
+        const apiKey = req.headers.get('API-Key');
+        const apiSecret = req.headers.get('API-Secret');
 
         console.log('API Key:', apiKey);
         console.log('API Secret:', apiSecret);
@@ -34,8 +34,8 @@ export async function POST(req: Request) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'x-api-key-id': apiKey,
-                'x-api-secret': apiSecret,
+                'API-Key': apiKey,
+                'API-Secret': apiSecret,
                 accept: 'application/json',
             },
             body: JSON.stringify({ user, password }),

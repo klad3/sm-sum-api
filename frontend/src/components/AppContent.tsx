@@ -40,14 +40,14 @@ const Pre = styled('pre')(({ theme }) => ({
 
 export const AppContent = () => {
     const router = useRouter();
-    const [selectedEndpoint, setSelectedEndpoint] = useState<string>('auth');
+    const [selectedEndpoint, setSelectedEndpoint] = useState<string>('');
     const [user, setUser] = useState('');
     const [password, setPassword] = useState('');
     const [apiKey, setApiKey] = useState<string | null>(null);
     const [apiSecret, setApiSecret] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [responseMessage, setResponseMessage] = useState<string | null>(null);
-    const [userResponse, setUserResponse] = useState<any>(null);
+    const [userResponse, setUserResponse] = useState<unknown>(null);
     const [statusCode, setStatusCode] = useState<number | null>(null);
     const [responseTime, setResponseTime] = useState<number | null>(null);
     const [isClient, setIsClient] = useState(false);
@@ -57,6 +57,7 @@ export const AppContent = () => {
 
     useEffect(() => {
         setIsClient(true);
+        setSelectedEndpoint('auth');
 
         if (typeof window !== 'undefined') {
             const storedApiKey = localStorage.getItem('apiKey');
@@ -74,8 +75,8 @@ export const AppContent = () => {
     const exampleCurl = `curl -X 'POST' \\
   'http://localhost:3000/api/auth' \\
   -H 'accept: application/json' \\
-  -H 'x-api-key-id: ${apiKey || "<API_KEY>"}' \\
-  -H 'x-api-secret: ${apiSecret || "<API_SECRET>"}' \\
+  -H 'API_KEY: ${apiKey || "<API_KEY>"}' \\
+  -H 'API_SECRET: ${apiSecret || "<API_SECRET>"}' \\
   -H 'Content-Type: application/json' \\
   -d '{ "user": "username", "password": "password" }'`;
 
@@ -101,8 +102,8 @@ export const AppContent = () => {
             const response = await fetch(`/api/${selectedEndpoint}`, {
                 method: 'POST',
                 headers: {
-                    'x-api-key-id': apiKey,
-                    'x-api-secret': apiSecret,
+                    'API-Key': apiKey,
+                    'API-Secret': apiSecret,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(body),
@@ -122,8 +123,12 @@ export const AppContent = () => {
             } else {
                 setResponseMessage(result.message || 'Error al procesar la solicitud');
             }
-        } catch (error: any) {
-            setResponseMessage(error.message || 'Error al procesar la solicitud');
+        } catch (error) {
+            if (error instanceof Error) {
+                setResponseMessage(error.message || 'Error al procesar la solicitud');
+            } else {
+                setResponseMessage('Error al procesar la solicitud');
+            }
         } finally {
             setLoading(false);
         }
@@ -209,7 +214,7 @@ export const AppContent = () => {
                                                 <Grid container spacing={2} alignItems="center">
                                                     <Grid item xs={12} sm={6}>
                                                         <TextField
-                                                            label="x-api-key-id"
+                                                            label="API_KEY"
                                                             fullWidth
                                                             value={apiKey}
                                                             InputProps={{
@@ -228,7 +233,7 @@ export const AppContent = () => {
 
                                                     <Grid item xs={12} sm={6}>
                                                         <TextField
-                                                            label="x-api-secret"
+                                                            label="API_SECRET"
                                                             fullWidth
                                                             type={showSecret ? 'text' : 'password'}
                                                             value={apiSecret}
