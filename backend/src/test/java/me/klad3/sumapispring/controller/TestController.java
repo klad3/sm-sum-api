@@ -1,6 +1,5 @@
 package me.klad3.sumapispring.controller;
 
-import jakarta.validation.constraints.NotBlank;
 import me.klad3.sumapispring.exception.AuthenticationException;
 import me.klad3.sumapispring.exception.BadRequestException;
 import me.klad3.sumapispring.exception.ExternalApiException;
@@ -18,9 +17,14 @@ public class TestController {
 
     @GetMapping("/validation")
     public void triggerValidationException(
-            @RequestParam @NotBlank(message = "Username is mandatory") String username,
-            @RequestParam @NotBlank(message = "Password is mandatory") String password) {
-        // Do nothing
+            @RequestParam String username,
+            @RequestParam String password) {
+        if (username == null || username.isBlank()) {
+            throw new IllegalArgumentException("Username is mandatory");
+        }
+        if (password == null || password.isBlank()) {
+            throw new IllegalArgumentException("Password is mandatory");
+        }
     }
 
     @GetMapping("/authentication")
