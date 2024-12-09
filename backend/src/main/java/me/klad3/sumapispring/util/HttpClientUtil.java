@@ -28,6 +28,12 @@ public class HttpClientUtil {
                 .build();
     }
 
+    public HttpClientUtil(HttpClient httpClient) {
+        this.cookieManager = new CookieManager();
+        this.cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+        this.httpClient = httpClient;
+    }
+
     public HttpResponse<String> get(String url) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
