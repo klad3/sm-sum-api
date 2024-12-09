@@ -45,7 +45,7 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.equals("/user/create");
+        return path.equals("/user/create") || path.startsWith("/api/test");
     }
 
     @Override

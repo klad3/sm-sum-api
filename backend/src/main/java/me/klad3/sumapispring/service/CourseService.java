@@ -42,7 +42,10 @@ public class CourseService {
                     ))
                     .toList();
 
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
+            throw new ExternalApiException("Error fetching courses from external API", e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new ExternalApiException("Error fetching courses from external API", e);
         }
     }
