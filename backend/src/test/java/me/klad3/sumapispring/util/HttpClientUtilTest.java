@@ -141,4 +141,119 @@ class HttpClientUtilTest {
         assertTrue(cookies.contains("SESSIONID=abc123"));
         assertTrue(cookies.contains("USERID=john_doe"));
     }
+
+    @Test
+    void get_ShouldThrowIOException_WhenNetworkFails() throws IOException, InterruptedException {
+        String url = "https://invalid-url.com";
+
+        when(mockHttpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+                .thenThrow(new IOException("Network error"));
+
+        assertThrows(IOException.class, () -> {
+            httpClientUtil.get(url);
+        });
+    }
+
+    @Test
+    void post_ShouldThrowIOException_WhenNetworkFails() throws IOException, InterruptedException {
+        String url = "https://example.com";
+        MultiValueMap<String, String> formData = new org.springframework.util.LinkedMultiValueMap<>();
+        formData.add("username", "john");
+        formData.add("password", "doe");
+
+        when(mockHttpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+                .thenThrow(new IOException("Network error"));
+
+        assertThrows(IOException.class, () -> {
+            httpClientUtil.post(url, formData);
+        });
+    }
+
+    @Test
+    void getWithCookies_ShouldThrowIOException_WhenNetworkFails() throws IOException, InterruptedException {
+        String url = "https://example.com";
+        String cookies = "SESSIONID=abc123";
+
+        when(mockHttpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+                .thenThrow(new IOException("Network error"));
+
+        assertThrows(IOException.class, () -> {
+            httpClientUtil.getWithCookies(url, cookies);
+        });
+    }
+
+    @Test
+    void get_ShouldIncludeCorrectHeaders() throws IOException, InterruptedException {
+        String url = "https://example.com";
+        when(mockHttpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+                .thenReturn(mockHttpResponse);
+
+        httpClientUtil.get(url);
+
+        verify(mockHttpClient, times(1)).send(requestCaptor.capture(), any(HttpResponse.BodyHandler.class));
+        HttpRequest capturedRequest = requestCaptor.getValue();
+
+        assertEquals("text/html", capturedRequest.headers().firstValue("Accept").orElse(""));
+    }
+
+    @Test
+    void postWithCookies_ShouldIncludeCookiesInRequest() throws IOException, InterruptedException {
+        String url = "https://example.com";
+        String body = "data=example";
+        String cookies = "SESSIONID=abc123";
+        String contentType = "application/json";
+
+        when(mockHttpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+                .thenReturn(mockHttpResponse);
+
+        httpClientUtil.postWithCookies(url, body, cookies, contentType);
+
+        verify(mockHttpClient, times(1)).send(requestCaptor.capture(), any(HttpResponse.BodyHandler.class));
+        HttpRequest capturedRequest = requestCaptor.getValue();
+
+        assertEquals("application/json", capturedRequest.headers().firstValue("Content-Type").orElse(""));
+        assertEquals("application/json", capturedRequest.headers().firstValue("Accept").orElse(""));
+        assertEquals(cookies, capturedRequest.headers().firstValue("Cookie").orElse(""));
+    }
+
+    @Test
+    void constructor_ShouldInitializeHttpClientAndCookieManager() {
+        HttpClientUtil httpClientUtil = new HttpClientUtil();
+
+        assertNotNull(httpClientUtil);
+        assertNotNull(httpClientUtil.getHttpClient());
+        assertNotNull(httpClientUtil.getCookieManager());
+    }
+
+    @Test
+    void postWithCookies_ShouldSendRequestWithCorrectHeaders_WhenCalledWithValidParams() throws IOException, InterruptedException {
+        String url = "https://example.com/login";
+        String body = "username=john&password=doe";
+        String cookies = "SESSIONID=abc123";
+        String contentType = "application/x-www-form-urlencoded";
+
+        when(mockHttpClient.send(any(HttpRequest.class), any(HttpResponse.BodyHandler.class)))
+                .thenReturn(mockHttpResponse);
+        when(mockHttpResponse.statusCode()).thenReturn(200);
+        when(mockHttpResponse.body()).thenReturn("Success");
+
+        HttpResponse<String> response = httpClientUtil.postWithCookies(url, body, cookies, contentType);
+
+        assertNotNull(response);
+        assertEquals(200, response.statusCode());
+        assertEquals("Success", response.body());
+
+        verify(mockHttpClient, times(1)).send(requestCaptor.capture(), any(HttpResponse.BodyHandler.class));
+        HttpRequest capturedRequest = requestCaptor.getValue();
+
+        assertEquals(URI.create(url), capturedRequest.uri());
+        assertEquals("POST", capturedRequest.method());
+        assertEquals("application/x-www-form-urlencoded", capturedRequest.headers().firstValue("Content-Type").orElse(""));
+        assertEquals("application/json", capturedRequest.headers().firstValue("Accept").orElse(""));
+        assertEquals(cookies, capturedRequest.headers().firstValue("Cookie").orElse(""));
+
+        assertEquals(body, capturedRequest.bodyPublisher().map(publisher -> body).orElse(""));
+    }
+
+
 }

@@ -102,4 +102,12 @@ public class HttpClientUtil {
             }
         });
     }
+
+    public HttpClient getHttpClient() {
+        return httpClient;
+    }
+
+    public CookieManager getCookieManager() {
+        return cookieManager;
+    }
 }
