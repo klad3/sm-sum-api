@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ActiveProfiles("security-test")
-public class ApiKeyAuthFilterTest {
+class ApiKeyAuthFilterTest {
 
     @Mock
     private UserService userService;

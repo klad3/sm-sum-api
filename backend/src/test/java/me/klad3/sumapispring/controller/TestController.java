@@ -6,6 +6,8 @@ import me.klad3.sumapispring.exception.ExternalApiException;
 import me.klad3.sumapispring.exception.ResourceAlreadyExistsException;
 import me.klad3.sumapispring.exception.ResourceNotFoundException;
 import me.klad3.sumapispring.exception.ApiKeyUnauthorizedException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,5 +62,15 @@ public class TestController {
     @GetMapping("/general-error")
     public void triggerGeneralException() {
         throw new RuntimeException("General error");
+    }
+
+    @GetMapping("/missing-parameter")
+    public void triggerMissingServletRequestParameterException() throws MissingServletRequestParameterException {
+        throw new MissingServletRequestParameterException("param", "String");
+    }
+
+    @GetMapping("/malformed-json")
+    public void triggerHttpMessageNotReadableException() {
+        throw new HttpMessageNotReadableException("Malformed JSON request");
     }
 }

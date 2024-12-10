@@ -124,4 +124,28 @@ class GlobalExceptionHandlerTest {
                 .andExpect(jsonPath("$.data.error", is("General error")))
                 .andExpect(jsonPath("$.success", is(false)));
     }
+
+    @Test
+    @DisplayName("Handle MissingServletRequestParameterException - Bad Request")
+    void handleMissingServletRequestParameterException_ShouldReturnBadRequest() throws Exception {
+        mockMvc.perform(get("/api/test/missing-parameter"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message", is("Bad Request")))
+                .andExpect(jsonPath("$.data.message", is("Required request parameter 'param' for method parameter type String is not present")))
+                .andExpect(jsonPath("$.data.error", is("Missing Request Parameter")))
+                .andExpect(jsonPath("$.success", is(false)));
+    }
+
+    @Test
+    @DisplayName("Handle HttpMessageNotReadableException - Bad Request")
+    void handleHttpMessageNotReadableException_ShouldReturnBadRequest() throws Exception {
+        mockMvc.perform(get("/api/test/malformed-json"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.message", is("Bad Request")))
+                .andExpect(jsonPath("$.data.message", is("Malformed JSON request")))
+                .andExpect(jsonPath("$.data.error", is("Malformed JSON Request")))
+                .andExpect(jsonPath("$.success", is(false)));
+    }
 }
