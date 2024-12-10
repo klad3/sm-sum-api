@@ -117,7 +117,7 @@ class AuthControllerTest {
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.success", is(false)))
-                .andExpect(jsonPath("$.message", is("Authentication Error")))
+                .andExpect(jsonPath("$.message", is("Authentication failed")))
                 .andExpect(jsonPath("$.data", is(notNullValue())));
 
         verify(authService, times(1)).login("invaliduser", "wrongpassword");

@@ -15,8 +15,23 @@ import java.util.List;
 @Slf4j
 public class HttpClientUtil {
 
+    private static final String ACCEPT_HEADER = "Accept";
+    private static final String COOKIE_HEADER = "Cookie";
+    private static final String CONTENT_TYPE_HEADER = "Content-Type";
+
+    private static final String ACCEPT_JSON = "application/json";
+    private static final String ACCEPT_HTML = "text/html";
+    private static final String CONTENT_TYPE_FORM = "application/x-www-form-urlencoded";
+    private static final String BASE_URL = "https://sum.unmsm.edu.pe";
+
     private final HttpClient httpClient;
     private final CookieManager cookieManager;
+
+    public HttpClientUtil(HttpClient httpClient) {
+        this.cookieManager = new CookieManager();
+        this.cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
+        this.httpClient = httpClient;
+    }
 
     public HttpClientUtil() {
         this.cookieManager = new CookieManager();
@@ -28,59 +43,73 @@ public class HttpClientUtil {
                 .build();
     }
 
-    public HttpClientUtil(HttpClient httpClient) {
-        this.cookieManager = new CookieManager();
-        this.cookieManager.setCookiePolicy(CookiePolicy.ACCEPT_ALL);
-        this.httpClient = httpClient;
-    }
-
     public HttpResponse<String> get(String url) throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .GET()
-                .header("Accept", "text/html")
-                .build();
-        return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .GET()
+                    .header(ACCEPT_HEADER, ACCEPT_HTML)
+                    .build();
+            return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            log.error("Error en la solicitud GET a {}: {}", url, e.getMessage());
+            throw e;
+        }
     }
 
     public HttpResponse<String> getWithCookies(String url, String cookies) throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(java.net.URI.create(url))
-                .GET()
-                .header("Accept", "application/json")
-                .header("Cookie", cookies)
-                .build();
-        return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .GET()
+                    .header(ACCEPT_HEADER, ACCEPT_JSON)
+                    .header(COOKIE_HEADER, cookies)
+                    .build();
+            return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            log.error("Error en la solicitud GET con cookies a {}: {}", url, e.getMessage());
+            throw e;
+        }
     }
 
     public HttpResponse<String> post(String url, MultiValueMap<String, String> formData) throws IOException, InterruptedException {
-        StringBuilder formBody = new StringBuilder();
-        formData.forEach((key, values) -> {
-            for (String value : values) {
-                if (formBody.length() > 0) {
-                    formBody.append("&");
+        try {
+            StringBuilder formBody = new StringBuilder();
+            formData.forEach((key, values) -> {
+                for (String value : values) {
+                    if (formBody.length() > 0) {
+                        formBody.append("&");
+                    }
+                    formBody.append(key).append("=").append(value);
                 }
-                formBody.append(key).append("=").append(value);
-            }
-        });
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .POST(HttpRequest.BodyPublishers.ofString(formBody.toString()))
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .header("Accept", "text/html")
-                .build();
-        return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            });
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .POST(HttpRequest.BodyPublishers.ofString(formBody.toString()))
+                    .header(CONTENT_TYPE_HEADER, CONTENT_TYPE_FORM)
+                    .header(ACCEPT_HEADER, ACCEPT_HTML)
+                    .build();
+            return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            log.error("Error en la solicitud POST a {}: {}", url, e.getMessage());
+            throw e;
+        }
     }
 
     public HttpResponse<String> postWithCookies(String url, String body, String cookies, String contentType) throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .POST(HttpRequest.BodyPublishers.ofString(body))
-                .header("Content-Type", contentType)
-                .header("Accept", "application/json")
-                .header("Cookie", cookies)
-                .build();
-        return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        try {
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .POST(HttpRequest.BodyPublishers.ofString(body))
+                    .header(CONTENT_TYPE_HEADER, contentType)
+                    .header(ACCEPT_HEADER, ACCEPT_JSON)
+                    .header(COOKIE_HEADER, cookies)
+                    .build();
+            return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        } catch (IOException | InterruptedException e) {
+            log.error("Error en la solicitud POST con cookies a {}: {}", url, e.getMessage());
+            throw e;
+        }
     }
 
     public String getFinalUrl(HttpResponse<?> response) {
@@ -88,7 +117,7 @@ public class HttpClientUtil {
     }
 
     public List<String> getAllCookies() {
-        return cookieManager.getCookieStore().get(URI.create("https://sum.unmsm.edu.pe")).stream()
+        return cookieManager.getCookieStore().get(URI.create(BASE_URL)).stream()
                 .map(cookie -> cookie.getName() + "=" + cookie.getValue())
                 .toList();
     }
@@ -96,7 +125,7 @@ public class HttpClientUtil {
     public void setResponseCookies(List<String> cookies) {
         cookies.forEach(cookie -> {
             try {
-                cookieManager.getCookieStore().add(URI.create("https://sum.unmsm.edu.pe"), HttpCookie.parse(cookie).get(0));
+                cookieManager.getCookieStore().add(URI.create(BASE_URL), HttpCookie.parse(cookie).get(0));
             } catch (Exception e) {
                 log.error("Error al agregar cookie: {}", cookie, e);
             }

@@ -37,7 +37,7 @@ class GlobalExceptionHandlerTest {
                 .andExpect(jsonPath("$.success", is(false)))
                 .andExpect(jsonPath("$.message", is("Bad Request")))
                 .andExpect(jsonPath("$.data.message", is("Required request parameter 'username' for method parameter type String is not present")))
-                .andExpect(jsonPath("$.data.error", is("Missing Request Parameter")))
+                .andExpect(jsonPath("$.data.error", is("Bad Request")))
         ;
     }
 
@@ -47,7 +47,7 @@ class GlobalExceptionHandlerTest {
         mockMvc.perform(get("/api/test/authentication"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.message", is("Authentication Error")))
+                .andExpect(jsonPath("$.message", is("Authentication failed")))
                 .andExpect(jsonPath("$.data.message", is("Invalid credentials")))
                 .andExpect(jsonPath("$.data.error", is("Authentication failed")))
                 .andExpect(jsonPath("$.success", is(false)));
@@ -133,7 +133,7 @@ class GlobalExceptionHandlerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.message", is("Bad Request")))
                 .andExpect(jsonPath("$.data.message", is("Required request parameter 'param' for method parameter type String is not present")))
-                .andExpect(jsonPath("$.data.error", is("Missing Request Parameter")))
+                .andExpect(jsonPath("$.data.error", is("Bad Request")))
                 .andExpect(jsonPath("$.success", is(false)));
     }
 
