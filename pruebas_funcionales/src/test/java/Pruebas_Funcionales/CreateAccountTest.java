@@ -7,7 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
-
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CreateAccountTest {
 
     private WebDriver driver;
@@ -25,6 +25,7 @@ public class CreateAccountTest {
     }
 
     @Test
+    @Order(1)
     public void testCreateAccountSuccess() {
         driver.get("http://localhost:3000/login");
 
