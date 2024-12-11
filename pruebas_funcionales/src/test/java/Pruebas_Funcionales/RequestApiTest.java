@@ -56,7 +56,7 @@ public class RequestApiTest {
             // Se necesita ingresar una cuenta real de unmsm, modificar para que pueda completarse el test
             WebElement userInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(":r9:")));
             userInput.clear(); // Limpia el campo antes de ingresar texto
-            userInput.sendKeys("daniel.ames");
+            userInput.sendKeys("INGRESAR CORREO REAL DE SU CORREO DE SAN MARCOS");
 
             WebElement passwordInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(":ra:")));
             passwordInput.clear(); // Limpia el campo antes de ingresar texto
