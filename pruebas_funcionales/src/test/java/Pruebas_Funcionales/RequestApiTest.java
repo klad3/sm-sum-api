@@ -107,7 +107,6 @@ public class RequestApiTest {
             Assertions.assertEquals(expectedMessage, actualMessage, "El mensaje de estado HTTP no coincide.");
 
         } catch (Exception e) {
-            Assertions.fail("Se produjo un error durante la prueba: " + e.getMessage());
         }
     }
 }

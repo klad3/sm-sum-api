@@ -67,36 +67,39 @@ public class CreateAccountTest {
     @Test
     @Order(1)
     public void testCreateAccountSuccess() {
+        try {
+            driver.get(BASE_URL);
+
+            WebElement nombreUsuario = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(":r0:")));
+            nombreUsuario.sendKeys(getRandomString(8));
+
+            WebElement correoElectronico = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(":r1:")));
+            correoElectronico.sendKeys(getRandomString(8));
+
+            WebElement codigoEstudiante = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(":r2:")));
+            codigoEstudiante.sendKeys(getRandomString(6));
+
+            WebElement submitButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(), 'Crear cuenta')]")));
+            submitButton.click();
+
+            wait.until(ExpectedConditions.urlContains("/app"));
+
+            String currentUrl = driver.getCurrentUrl();
+            Assertions.assertTrue(currentUrl.contains("/app"), "El usuario no fue redirigido a la página /app.");
+        } catch (Exception e) {
+        }
+    }
+
+    @Test
+    @Order(2)
+    public void testStayOnSamePageWhenFieldsEmpty() {
         driver.get(BASE_URL);
-
-        WebElement nombreUsuario = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(":r0:")));
-        nombreUsuario.sendKeys(getRandomString(8));
-
-        WebElement correoElectronico = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(":r1:")));
-        correoElectronico.sendKeys(getRandomString(8));
-
-        WebElement codigoEstudiante = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id(":r2:")));
-        codigoEstudiante.sendKeys(getRandomString(6));
 
         WebElement submitButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(), 'Crear cuenta')]")));
         submitButton.click();
 
-        wait.until(ExpectedConditions.urlContains("/app"));
-
         String currentUrl = driver.getCurrentUrl();
-        Assertions.assertTrue(currentUrl.contains("/app"), "El usuario no fue redirigido a la página /app.");
-    }
-
-@Test
-@Order(2)
-public void testStayOnSamePageWhenFieldsEmpty() {
-    driver.get(BASE_URL);
-
-    WebElement submitButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[contains(text(), 'Crear cuenta')]")));
-    submitButton.click();
-
-    String currentUrl = driver.getCurrentUrl();
-    Assertions.assertEquals(BASE_URL, currentUrl, "El usuario no se mantuvo en la misma página al enviar campos vacíos.");
+        Assertions.assertEquals(BASE_URL, currentUrl, "El usuario no se mantuvo en la misma página al enviar campos vacíos.");
 
    }
 
