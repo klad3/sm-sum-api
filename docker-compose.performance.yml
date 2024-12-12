@@ -33,9 +33,11 @@ services:
     volumes: 
       - ./jmeter:/jmeter
       - ./PerformanceTest:/PerformanceTest
+    environment:
+      - JMETER_TEST_PATH=/PerformanceTest/performanceTest.jmx
     networks: 
       - test-network
-    entrypoint: ["jmeter", "-n", "-t", "/PerformanceTest/performanceTest.jmx", "-l", "/jmeter/results/result.log"]
+    entrypoint: ["jmeter", "-n", "-t", "${JMETER_TEST_PATH}", "-l", "/jmeter/results/result.log"]
 
 networks:
   test-network:
