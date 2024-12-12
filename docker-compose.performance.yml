@@ -3,7 +3,7 @@ version: '3.8'
 services:
   db:
     image: mysql:8
-    container_name: mysql-test
+    container_name: mysql-performance
     environment:
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
@@ -11,7 +11,7 @@ services:
       - test-network
 
   backend:
-    container_name: backend-container-test
+    container_name: backend-container-performance
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -26,8 +26,9 @@ services:
       - test-network
     depends_on:
       - db
+
   jmeter: 
-    image: justb4/jmeter:5.4.1
+    image: justb4/jmeter
     container_name: jmeter-container
     volumes: 
       - ./jmeter:/jmeter
