@@ -35,7 +35,7 @@ services:
       - ./PerformanceTest:/PerformanceTest
     networks: 
       - test-network
-    entrypoint: ["jmeter", "-n", "-t", "/PerformanceTest/PRUEBAS DE RENDIMIENTO.jmx", "-l", "/jmeter/results/result.log"]
+    entrypoint: ["jmeter", "-n", "-t", "/PerformanceTest/performanceTest.jmx", "-l", "/jmeter/results/result.log"]
 
 networks:
   test-network:
