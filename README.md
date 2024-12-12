@@ -205,6 +205,11 @@ Si deseas contribuir a este proyecto, sigue estos pasos:
 6. Despliegue en VPS.
 - Utilizar SSH para conectarse al servidor de despliegue.
 - Navegar al directorio de trabajo, realizar un git pull y desplegar los contenedores definidos en docker-compose.yml.
+### Capturas del proceso del pipeline.
+### 1. Resultados de SonarQube.
+![Resultados de SonarQube](images/sum_api1.jpg)
+### 2. Stage View.
+![Captura del Stage View](images/sum_api2.jpg)
 
 ---
 
