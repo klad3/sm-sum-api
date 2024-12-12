@@ -191,25 +191,41 @@ Si deseas contribuir a este proyecto, sigue estos pasos:
 ### Definición de las etapas del Pipeline.
 1. Checkout.
 - Clonar el repositorio desde GitHub en la rama especificada.
+![Checkout](images/stage1.jpg)
 2. Instalación de Dependencias del Backend.
 - Navegar al directorio backend y ejecutar la instalación de dependencias usando Maven sin ejecutar pruebas.
+![Dependencias](images/stage2.jpg)
 3. Análisis de Código Estático
 - Realizar un análisis de código estático con SonarQube en el directorio backend.
+![Análisis Código](images/stage3.jpg)
 4. Ejecución de Pruebas Unitarias.
 - Ejecutar las pruebas unitarias del backend con Maven.
 - Publicar los resultados de las pruebas en Jenkins.
+![Pruebas Unitarias](images/stage4.jpg)
 5. Ejecución de Pruebas Funcionales.
 - Descargar y preparar el script wait-for-it.sh para esperar a que los servicios estén listos.
 - Ejecutar los contenedores de prueba definidos en docker-compose.test.yml.
 - Ejecuta las pruebas funcionales utilizando Selenium y publica los resultados en Jenkins.
+![Pruebas Funcionales](images/stage5.jpg)
 6. Despliegue en VPS.
 - Utilizar SSH para conectarse al servidor de despliegue.
 - Navegar al directorio de trabajo, realizar un git pull y desplegar los contenedores definidos en docker-compose.yml.
+![Despliegue VPS](images/stage6.jpg)
 ### Capturas del proceso del pipeline.
 ### 1. Resultados de SonarQube.
 ![Resultados de SonarQube](images/sum_api1.jpg)
 ### 2. Stage View.
 ![Captura del Stage View](images/sum_api2.jpg)
+
+---
+
+## Pruebas de Rendimiento
+Se muestran las pruebas de rendimiento para los endpoints de login y user create utilizando JMeter.
+### Capturas de las pruebas de rendimiento.
+### 1. Pruebas de Login.
+![Pruebas de Login](images/performance2.jpg)
+### 2. Pruebas de Create.
+![Pruebas de Create](images/performance1.jpg)
 
 ---
 
