@@ -83,7 +83,7 @@ mvn -version
 
 ---
 
-## Estructura del Proyecto
+## Estructura del Backend
 ```
 ├── src
 │   ├── main
@@ -136,7 +136,36 @@ mvn -version
 ├── pom.xml (archivo de dependencias de Maven)
 └── README.md (este archivo)
 ```
-
+---
+## Estructura del Fronted
+```
+├── frontend
+│   ├── public
+│   ├── src
+│   │   ├── actions
+│   │   ├── app
+│   │   │   ├── api
+│   │   │   │   └── auth
+│   │   │   │       └── route.ts
+│   │   │   ├── app
+│   │   │   │   └── page.tsx
+│   │   │   ├── fonts
+│   │   │   │   ├── GeistMonoVF.woff
+│   │   │   │   └── GeistVF.woff
+│   │   │   ├── login
+│   │   │   │   ├── page.tsx
+│   │   │   │   ├── favicon.ico
+│   │   │   │   ├── globals.css
+│   │   │   │   ├── layout.tsx
+│   │   │   │   └── page.tsx
+│   │   │   ├── components
+│   │   │   │   ├── AppContent.tsx
+│   │   │   │   ├── ClientProvider.tsx
+│   │   │   │   ├── LoadingSkeleton.tsx
+│   │   │   │   ├── LoginForm.tsx
+│   │   │   │   └── UnmsmIcon.tsx
+│   │   └── theme.ts
+```
 ---
 
 ## Endpoints de la API
