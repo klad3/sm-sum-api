@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8
+    container_name: mysql-test
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    networks:
+      - test-network
+
+  backend:
+    container_name: backend-container-test
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+    networks:
+      - test-network
+    depends_on:
+      - db
+  jmeter: 
+    image: justb4/jmeter:5.4.1
+    container_name: jmeter-container
+    volumes: 
+      - ./jmeter:/jmeter
+      - ./PerformanceTest:/PerformanceTest
+    networks: 
+      - test-network
+    entrypoint: ["jmeter", "-n", "-t", "/PerformanceTest/PRUEBAS DE RENDIMIENTO.jmx", "-l", "/jmeter/results/result.log"]
+
+networks:
+  test-network:
+    external: true
