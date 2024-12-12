@@ -211,13 +211,13 @@ Si deseas contribuir a este proyecto, sigue estos pasos:
 ## Funcionalidades
 ### 1. Ingreso con credenciales
 Permite a los usuarios ingresar con sus respectivas credenciales al sistema.
-[Ingreso con credenciales](images/login.jpg)
+![Ingreso con credenciales](images/login.jpg)
 ### 2. Visualización de headers 
 Permite visualizar los respectivos headers del sistema, en este caso, las variables API_KEY y API_SECRET.
-[Visualización de headers](images/headers.jpg)
+![Visualización de headers](images/headers.jpg)
 ### 3. Envío de solicitud.
 Envíos a través de credenciales de un determinado usuario. 
-[Envío de solicitud](images/envio_solicitud.jpg)
+![Envío de solicitud](images/envio_solicitud.jpg)
 
 ---
 ## Licencia
