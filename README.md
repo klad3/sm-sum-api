@@ -1,5 +1,14 @@
 # Proyecto: SUM API
 
+## Integrantes del proyecto.
+- Ames Camayo, Daniel Vides.
+- Cjumo Chumbes, Jose Carlos
+- Ortiz Quispe, Akcel Eduardo.
+- Ramirez Alvarado, Piero Jaime.
+- Santa Cruz Pachas, Edward Grover.
+
+---
+
 ## Descripción
 
 Este proyecto es una aplicación desarrollada con **Java** y el framework **Spring Boot**. Su objetivo principal es facilitar la realización de proyectos académicos que requieren acceso a información gestionada por el SUM. Al consolidar estas herramientas en un solo punto de encuentro, se fomenta la creación de sistemas más eficientes y accesibles para los alumnos.
@@ -169,8 +178,46 @@ Si deseas contribuir a este proyecto, sigue estos pasos:
 
 ---
 
-## Licencia
-Este proyecto está licenciado bajo la licencia [Nombre de la licencia, por ejemplo, MIT, Apache 2.0, etc.]. Consulte el archivo `LICENSE` para más detalles.
+## Instalación y Configuración del Pipeline de CI/CD (Jenkins)
+### Prerrequisitos
+- Jenkins instalado y funcionando.
+- Acceso al repositorio de GitHub del proyecto.
+- Servidor de despliegue accesible vía SSH.
+- SonarQube configurado para el análisis estático de código.
+- Docker y Docker Compose instalados en el servidor de despliegue.
+### Configuración del Pipeline
+- Crear un nuevo job del tipo "pipeline" en Jenkins
+- Configurar el pipeline en el campo Script de Pipeline usando el script indicado.
+### Definición de las etapas del Pipeline.
+1. Checkout.
+- Clonar el repositorio desde GitHub en la rama especificada.
+2. Instalación de Dependencias del Backend.
+- Navegar al directorio backend y ejecutar la instalación de dependencias usando Maven sin ejecutar pruebas.
+3. Análisis de Código Estático
+- Realizar un análisis de código estático con SonarQube en el directorio backend.
+4. Ejecución de Pruebas Unitarias.
+- Ejecutar las pruebas unitarias del backend con Maven.
+- Publicar los resultados de las pruebas en Jenkins.
+5. Ejecución de Pruebas Funcionales.
+- Descargar y preparar el script wait-for-it.sh para esperar a que los servicios estén listos.
+- Ejecutar los contenedores de prueba definidos en docker-compose.test.yml.
+- Ejecuta las pruebas funcionales utilizando Selenium y publica los resultados en Jenkins.
+6. Despliegue en VPS.
+- Utilizar SSH para conectarse al servidor de despliegue.
+- Navegar al directorio de trabajo, realizar un git pull y desplegar los contenedores definidos en docker-compose.yml.
+
+---
+
+## Funcionalidades
+### 1. Ingreso con credenciales
+Permite a los usuarios ingresar con sus respectivas credenciales al sistema.
+![Ingreso con credenciales](images/login.jpg)
+### 2. Visualización de headers 
+Permite visualizar los respectivos headers del sistema, en este caso, las variables API_KEY y API_SECRET.
+![Visualización de headers](images/headers.jpg)
+### 3. Envío de solicitud.
+Envíos a través de credenciales de un determinado usuario. 
+![Envío de solicitud](images/envio_solicitud.jpg)
 
 ---
 
