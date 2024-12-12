@@ -220,10 +220,6 @@ Envíos a través de credenciales de un determinado usuario.
 ![Envío de solicitud](images/envio_solicitud.jpg)
 
 ---
-## Licencia
-Este proyecto está licenciado bajo la licencia [Nombre de la licencia, por ejemplo, MIT, Apache 2.0, etc.]. Consulte el archivo `LICENSE` para más detalles.
-
----
 
 **¡Gracias por usar API UNMSM!**
 
